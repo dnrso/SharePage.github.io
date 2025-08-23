@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국 디지털 출판 시장 혁명: 인포그래픽</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #F0F4F8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .kpi-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            text-align: center;
+            border-left: 5px solid #4A90E2;
+        }
+        .flowchart-step {
+            background-color: #E3F2FD;
+            border: 2px solid #90CAF9;
+            color: #1E88E5;
+        }
+        .flowchart-arrow {
+            color: #4A90E2;
+        }
+        .section-title {
+            color: #1A237E;
+        }
+        .highlight-text {
+            color: #D32F2F;
+        }
+        .gemini-card {
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+        }
+        .gemini-response {
+            white-space: pre-wrap;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4A90E2;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .calculator-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+        .calculator-card .content {
+            flex-grow: 1;
+        }
+        .calculator-card .result-area {
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-10">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-3xl md:text-4xl font-black text-center section-title">디지털 독서 혁명: 한국 출판 시장의 대전환</h1>
+            <p class="text-center text-gray-600 mt-2">데이터로 보는 이북, 오디오북, 그리고 창작자 경제의 모든 것</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        
+        <section id="market-growth" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 section-title">폭발하는 시장: 디지털이 종이를 압도하다</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="kpi-card">
+                    <h3 class="text-lg font-bold text-gray-700">국내 전자책 시장 규모</h3>
+                    <p class="text-5xl font-black text-[#4A90E2] my-3">5,600억+</p>
+                    <p class="text-gray-500">4년 만에 2배 이상 성장하며<br>전통 종이책 시장의 감소세와 극명한 대조</p>
+                </div>
+                <div class="kpi-card">
+                    <h3 class="text-lg font-bold text-gray-700">MZ세대의 이북 이용률 (20대)</h3>
+                    <p class="text-5xl font-black text-[#4A90E2] my-3">58.3%</p>
+                    <p class="text-gray-500">디지털 네이티브 세대가<br>시장의 성장을 견인하는 핵심 동력</p>
+                </div>
+                <div class="kpi-card">
+                    <h3 class="text-lg font-bold text-gray-700">키즈 콘텐츠 시장 규모</h3>
+                    <p class="text-5xl font-black text-[#4A90E2] my-3">50조+</p>
+                    <p class="text-gray-500">'골드키즈' 현상에 힘입어<br>저출산 기조 속 역설적 성장</p>
+                </div>
+            </div>
+            <div class="mt-12 bg-white rounded-lg shadow-md p-6">
+                 <h3 class="text-xl font-bold text-center mb-4 section-title">전자책 vs 종이책: 엇갈린 운명</h3>
+                 <p class="text-center text-gray-600 mb-6">전자책 시장이 기하급수적으로 성장하는 동안, 신간 종이책 발행 부수는 지속적으로 감소하며 출판 패러다임의 구조적 전환을 명확히 보여주고 있습니다.</p>
+                <div class="chart-container h-80 md:h-96">
+                    <canvas id="marketTrendChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="gemini-advisor" class="mb-16">
+            <div class="gemini-card rounded-lg shadow-xl p-8 text-center">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">✨ AI 창작자 전략 어드바이저</h2>
+                <p class="text-white mb-6">당신의 콘텐츠 장르를 입력하고, 데이터 기반의 최적 출판 전략을 추천받아 보세요.</p>
+                <div class="max-w-xl mx-auto">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input type="text" id="genreInput" class="w-full px-4 py-3 rounded-md border-2 border-transparent focus:outline-none focus:border-white" placeholder="예: 아동용 그림책, SF 웹소설, 전문 IT 서적">
+                        <button id="getStrategyBtn" class="bg-white text-blue-600 font-bold px-8 py-3 rounded-md hover:bg-gray-200 transition-colors duration-300">
+                            AI 전략 추천받기 ✨
+                        </button>
+                    </div>
+                </div>
+                <div id="strategyResult" class="mt-6 text-left">
+                    <div id="loader" class="hidden loader"></div>
+                    <div id="responseContainer" class="gemini-response hidden"></div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="revenue-calculator" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 section-title">💰 플랫폼별 수익 예측 시뮬레이터</h2>
+            <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+                주요 플랫폼의 비즈니스 모델은 수익 구조가 매우 다릅니다. 아래 계산기를 통해 당신의 콘텐츠가 각 플랫폼에서 어느 정도의 수익을 창출할 수 있는지 시뮬레이션 해보세요. (모든 계산은 세전 기준이며, 실제 수익은 계약 조건에 따라 달라질 수 있습니다.)
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                
+                <div class="calculator-card">
+                    <div class="content">
+                        <h3 class="text-xl font-bold mb-4 text-center text-[#4A90E2]">교보문고 / YES24 (B2C)</h3>
+                        <div class="space-y-4">
+                            <div><label for="kyoboPrice" class="block text-sm font-medium text-gray-700">도서 정가 (원)</label><input type="number" id="kyoboPrice" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="10000"></div>
+                            <div><label for="kyoboPlatformFee" class="block text-sm font-medium text-gray-700">플랫폼 수수료 (%)</label><input type="number" id="kyoboPlatformFee" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="30"></div>
+                            <div><label for="kyoboRoyalty" class="block text-sm font-medium text-gray-700">작가 인세율 (%)</label><input type="number" id="kyoboRoyalty" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="50"></div>
+                            <div><label for="kyoboSales" class="block text-sm font-medium text-gray-700">월간 판매 부수</label><input type="number" id="kyoboSales" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="100"></div>
+                        </div>
+                    </div>
+                    <div class="result-area mt-6">
+                        <button id="calculateKyobo" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700">계산하기</button>
+                        <div class="mt-4 text-center"><p class="text-gray-600">예상 월별 수익</p><p id="kyoboResult" class="text-2xl font-bold text-gray-900">0 원</p></div>
+                    </div>
+                </div>
+
+                <div class="calculator-card">
+                    <div class="content">
+                        <h3 class="text-xl font-bold mb-4 text-center" style="color: #6F42C1;">카카오페이지 (웹소설)</h3>
+                        <div class="space-y-4">
+                            <div><label for="kakaoPrice" class="block text-sm font-medium text-gray-700">회차당 가격 (원)</label><input type="number" id="kakaoPrice" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="100"></div>
+                            <div><label for="kakaoPlatformFee" class="block text-sm font-medium text-gray-700">플랫폼 수수료 (%)</label><input type="number" id="kakaoPlatformFee" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="45"></div>
+                            <div><label for="kakaoRoyalty" class="block text-sm font-medium text-gray-700">작가 인세율 (%)</label><input type="number" id="kakaoRoyalty" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="70"></div>
+                            <div><label for="kakaoSubscribers" class="block text-sm font-medium text-gray-700">월간 유료 구독자 수</label><input type="number" id="kakaoSubscribers" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="100"></div>
+                            <div><label for="kakaoViews" class="block text-sm font-medium text-gray-700">인당 월평균 결제 회차</label><input type="number" id="kakaoViews" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="20"></div>
+                        </div>
+                    </div>
+                    <div class="result-area mt-6">
+                        <button id="calculateKakao" class="w-full font-bold py-2 px-4 rounded-md text-white" style="background-color: #6F42C1;">계산하기</button>
+                        <div class="mt-4 text-center"><p class="text-gray-600">예상 월별 수익</p><p id="kakaoResult" class="text-2xl font-bold text-gray-900">0 원</p></div>
+                    </div>
+                </div>
+
+                <div class="calculator-card">
+                    <div class="content">
+                        <h3 class="text-xl font-bold mb-4 text-center" style="color: #03C75A;">네이버 시리즈 (웹소설)</h3>
+                        <div class="space-y-4">
+                            <div><label for="naverPrice" class="block text-sm font-medium text-gray-700">회차당 가격 (원)</label><input type="number" id="naverPrice" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="100"></div>
+                            <div><label for="naverPlatformFee" class="block text-sm font-medium text-gray-700">플랫폼 수수료 (%)</label><input type="number" id="naverPlatformFee" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="30"></div>
+                            <div><label for="naverRoyalty" class="block text-sm font-medium text-gray-700">작가 인세율 (%)</label><input type="number" id="naverRoyalty" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="70"></div>
+                            <div><label for="naverSubscribers" class="block text-sm font-medium text-gray-700">월간 유료 구독자 수</label><input type="number" id="naverSubscribers" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="100"></div>
+                            <div><label for="naverViews" class="block text-sm font-medium text-gray-700">인당 월평균 결제 회차</label><input type="number" id="naverViews" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="20"></div>
+                        </div>
+                    </div>
+                    <div class="result-area mt-6">
+                        <button id="calculateNaver" class="w-full font-bold py-2 px-4 rounded-md text-white" style="background-color: #03C75A;">계산하기</button>
+                        <div class="mt-4 text-center"><p class="text-gray-600">예상 월별 수익</p><p id="naverResult" class="text-2xl font-bold text-gray-900">0 원</p></div>
+                    </div>
+                </div>
+
+                <div class="calculator-card">
+                    <div class="content">
+                        <h3 class="text-xl font-bold mb-4 text-center" style="color: #1F8CE6;">리디 (B2C/웹소설)</h3>
+                        <div class="space-y-4">
+                            <div><label for="ridiPrice" class="block text-sm font-medium text-gray-700">정가/회차당 가격 (원)</label><input type="number" id="ridiPrice" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="5000"></div>
+                            <div><label for="ridiPlatformFee" class="block text-sm font-medium text-gray-700">플랫폼 수수료 (%)</label><input type="number" id="ridiPlatformFee" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="30"></div>
+                            <div><label for="ridiRoyalty" class="block text-sm font-medium text-gray-700">작가 인세율 (%)</label><input type="number" id="ridiRoyalty" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="60"></div>
+                            <div><label for="ridiSales" class="block text-sm font-medium text-gray-700">월간 판매/유료 구독자 수</label><input type="number" id="ridiSales" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" value="100"></div>
+                        </div>
+                    </div>
+                    <div class="result-area mt-6">
+                        <button id="calculateRidi" class="w-full font-bold py-2 px-4 rounded-md text-white" style="background-color: #1F8CE6;">계산하기</button>
+                        <div class="mt-4 text-center"><p class="text-gray-600">예상 월별 수익</p><p id="ridiResult" class="text-2xl font-bold text-gray-900">0 원</p></div>
+                    </div>
+                </div>
+                
+                <div class="calculator-card">
+                    <div class="content">
+                        <h3 class="text-xl font-bold mb-4 text-center" style="color: #FF6600;">밀리의 서재 (구독/개념)</h3>
+                        <p class="text-sm text-gray-600">구독 모델은 작가의 수익이 플랫폼 전체 수익과 내 콘텐츠의 **상대적 점유율**에 따라 결정되어 정확한 계산이 불가능합니다. 아래는 이 구조를 이해하기 위한 **가상 예시**입니다.</p>
+                        <div class="mt-4 p-3 bg-orange-50 rounded-lg text-sm">
+                            <p><span class="font-bold">가정:</span> 플랫폼 월 인세 지급 총액 50억, 전체 읽힌 페이지 100억 페이지, 내 책 구독자 100명이 300p 완독 (총 30,000 페이지 기여).</p>
+                            <p class="mt-2 font-bold">계산: (50억 × (3만 / 100억)) × 작가 인세율 50%</p>
+                        </div>
+                    </div>
+                    <div class="result-area mt-6">
+                         <div class="text-center"><p class="text-gray-600">개념적 예상 월별 수익</p><p class="text-2xl font-bold text-gray-900">7,500 원</p><p class="text-xs text-gray-500 mt-2">이 수치는 실제 수익이 아니며, 소수의 인기작에 수익이 집중되는 구독 모델의 구조적 특성을 보여주기 위한 예시입니다.</p></div>
+                    </div>
+                </div>
+
+                <div class="calculator-card">
+                    <div class="content">
+                        <h3 class="text-xl font-bold mb-4 text-center" style="color: #5F0080;">윌라 (오디오북 구독/개념)</h3>
+                        <p class="text-sm text-gray-600">오디오북 구독 모델 역시 콘텐츠의 **상대적 청취 시간 점유율**에 따라 수익이 결정됩니다. 아래는 구조 이해를 위한 **가상 예시**입니다.</p>
+                        <div class="mt-4 p-3 bg-purple-50 rounded-lg text-sm">
+                            <p><span class="font-bold">가정:</span> 플랫폼 월 인세 지급 총액 10억, 전체 청취 시간 100만 시간, 내 오디오북 구독자 100명이 5시간 완청 (총 500시간 기여).</p>
+                            <p class="mt-2 font-bold">계산: (10억 × (500 / 100만)) × 작가 인세율 50%</p>
+                        </div>
+                    </div>
+                    <div class="result-area mt-6">
+                         <div class="text-center"><p class="text-gray-600">개념적 예상 월별 수익</p><p class="text-2xl font-bold text-gray-900">250,000 원</p><p class="text-xs text-gray-500 mt-2">이 수치는 실제 수익이 아니며, 오디오북은 이북보다 참여 가치가 높게 책정될 수 있음을 보여주는 예시입니다.</p></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="platform-competition" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 section-title">왕좌의 게임: 플랫폼 경쟁 구도</h2>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-bold text-center mb-4 section-title">주요 플랫폼 시장 점유율 (구독 모델 중심)</h3>
+                <p class="text-center text-gray-600 mb-6">'밀리의 서재'가 약 60%의 압도적인 점유율로 구독 시장을 지배하고 있으며, 그 뒤를 리디, 윌라 등이 쫓고 있습니다.</p>
+                <div class="chart-container h-80 md:h-96">
+                    <canvas id="platformShareChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="challenges" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 section-title">역풍의 항해: 산업의 핵심 도전 과제</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="font-bold text-lg mb-2 text-center">📜 '매절 계약'의 함정</h3>
+                    <p class="text-gray-600">일시금을 받고 모든 저작권을 넘기는 계약은 '구름빵' 사례처럼 창작자에게 치명적일 수 있습니다. 4,400억원의 부가가치에도 작가는 추가 보상을 받지 못했습니다.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="font-bold text-lg mb-2 text-center">🔒 불법 복제와 보안</h3>
+                    <p class="text-gray-600">2023년 알라딘 이북 대량 유출 사건은 DRM 시스템의 취약성을 드러내며 산업 전체의 신뢰를 뒤흔들었습니다. 이는 연 8,400억원 규모의 웹툰 불법 유통 문제와 함께 심각한 위협입니다.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="font-bold text-lg mb-2 text-center">🤖 AI와 저작권 분쟁</h3>
+                    <p class="text-gray-600">AI TTS(텍스트 음성 변환) 기술은 '오디오북'의 법적 정의를 둘러싼 새로운 분쟁을 낳았습니다. 기술 발전이 기존 저작권법의 공백을 파고들고 있습니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="future-outlook" class="mb-16">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 section-title">미래를 향한 항해: 전략적 전망과 제언</h2>
+            <div class="mb-12">
+                <h3 class="text-xl font-bold text-center mb-4">미래 시장을 주도할 3대 핵심 트렌드</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <div class="text-4xl mb-4">🔄</div>
+                        <h4 class="font-bold text-lg">콘텐츠 융합</h4>
+                        <p class="text-gray-600">이북, 오디오북, 웹소설의 경계가 허물어지고, 하나의 IP가 다양한 포맷으로 확장되는 '미디어 믹스'가 표준이 될 것입니다.</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <div class="text-4xl mb-4">💡</div>
+                        <h4 class="font-bold text-lg">AI 기술 통합</h4>
+                        <p class="text-gray-600">AI는 단순 추천을 넘어 콘텐츠 제작과 초개인화된 사용자 경험 설계의 핵심 동력이 될 것입니다.</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <div class="text-4xl mb-4">👑</div>
+                        <h4 class="font-bold text-lg">오리지널 IP 경쟁</h4>
+                        <p class="text-gray-600">플랫폼 간 경쟁이 심화됨에 따라, 독점적인 오리지널 IP를 확보하기 위한 '콘텐츠 군비 경쟁'이 가속화될 것입니다.</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-center mb-4">이해관계자별 생존 전략</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="bg-blue-100 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                        <h4 class="font-bold text-lg text-blue-800 mb-2">플랫폼 사업자</h4>
+                        <ul class="list-disc list-inside text-blue-700 space-y-1">
+                            <li>보안 강화로 출판계 신뢰 회복</li>
+                            <li>AI-TTS와 성우 낭독 가치 차별화</li>
+                            <li>투명한 수익 정산 시스템 구축</li>
+                        </ul>
+                    </div>
+                    <div class="bg-green-100 border-l-4 border-green-500 p-6 rounded-r-lg">
+                        <h4 class="font-bold text-lg text-green-800 mb-2">출판사</h4>
+                        <ul class="list-disc list-inside text-green-700 space-y-1">
+                            <li>디지털 권리 계약의 현대화</li>
+                            <li>디지털-종이책 하이브리드 전략</li>
+                            <li>산업 표준 수립을 위한 협력</li>
+                        </ul>
+                    </div>
+                    <div class="bg-purple-100 border-l-4 border-purple-500 p-6 rounded-r-lg">
+                        <h4 class="font-bold text-lg text-purple-800 mb-2">창작자</h4>
+                        <ul class="list-disc list-inside text-purple-700 space-y-1">
+                            <li>'매절 계약' 회피 및 2차 저작권 사수</li>
+                            <li>계약서 내 수익 투명성 조항 요구</li>
+                            <li>디지털 IP 전문 법률 자문 활용</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-6">
+        <p>본 인포그래픽은 제공된 연구 보고서를 기반으로 제작되었습니다.</p>
+        <p class="text-sm text-gray-400 mt-2">데이터 시각화 by Canvas Infographics</p>
+    </footer>
+
+    <script>
+        const vibrantPalette = {
+            blue: '#4A90E2',
+            teal: '#50E3C2',
+            orange: '#F5A623',
+            red: '#D0021B',
+            purple: '#9013FE',
+            lightBlue: '#BDD7EE',
+            darkBlue: '#1A237E'
+        };
+
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) { return label.join(' '); }
+            return label;
+        };
+        
+        const defaultTooltipOptions = { plugins: { tooltip: { callbacks: { title: tooltipTitleCallback } } } };
+
+        const marketTrendCtx = document.getElementById('marketTrendChart').getContext('2d');
+        new Chart(marketTrendCtx, {
+            type: 'bar',
+            data: {
+                labels: ['전자책 시장 성장', '종이책 발행 부수'],
+                datasets: [{ label: '변화율/규모', data: [107, -30], backgroundColor: [vibrantPalette.blue, vibrantPalette.red] }]
+            },
+            options: { ...defaultTooltipOptions, responsive: true, maintainAspectRatio: false, indexAxis: 'y', scales: { x: { beginAtZero: true, ticks: { callback: (v) => v + (v > 0 ? '% 성장' : '만 부 감소') } } }, plugins: { ...defaultTooltipOptions.plugins, legend: { display: false }, title: { display: true, text: '전자책 시장 성장률 vs 종이책 발행 부수 감소량', font: { size: 16 } } } }
+        });
+
+        const platformShareCtx = document.getElementById('platformShareChart').getContext('2d');
+        new Chart(platformShareCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['밀리의 서재', '리디', '윌라', '기타'],
+                datasets: [{ data: [60, 20, 10, 10], backgroundColor: [vibrantPalette.orange, '#1F8CE6', '#5F0080', vibrantPalette.lightBlue], hoverOffset: 4 }]
+            },
+            options: { ...defaultTooltipOptions, responsive: true, maintainAspectRatio: false, plugins: { ...defaultTooltipOptions.plugins, legend: { position: 'top' } } }
+        });
+
+        const getStrategyBtn = document.getElementById('getStrategyBtn');
+        const genreInput = document.getElementById('genreInput');
+        const loader = document.getElementById('loader');
+        const responseContainer = document.getElementById('responseContainer');
+
+        const callGemini = async (prompt, retries = 3, delay = 1000) => {
+            const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            try {
+                const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!response.ok) {
+                    if (response.status === 429 && retries > 0) { await new Promise(res => setTimeout(res, delay)); return callGemini(prompt, retries - 1, delay * 2); }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                if (result.candidates?.[0]?.content?.parts?.[0]?.text) { return result.candidates[0].content.parts[0].text; }
+                return "죄송합니다. 유효한 답변을 생성할 수 없습니다.";
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                if (retries > 0) { await new Promise(res => setTimeout(res, delay)); return callGemini(prompt, retries - 1, delay * 2); }
+                return "AI 모델 호출 중 오류가 발생했습니다.";
+            }
+        };
+
+        getStrategyBtn.addEventListener('click', async () => {
+            const genre = genreInput.value.trim();
+            if (!genre) { responseContainer.textContent = "분석할 콘텐츠 장르를 입력해주세요."; responseContainer.classList.remove('hidden'); return; }
+            loader.classList.remove('hidden');
+            responseContainer.classList.add('hidden');
+            const prompt = `당신은 한국 디지털 출판 시장의 전문 분석가입니다. '${genre}' 장르의 창작자를 위한 최적의 출판 전략(추천 모델, 추천 플랫폼, 전략적 근거)을 시장 데이터에 기반하여 추천해주세요.`;
+            const resultText = await callGemini(prompt);
+            loader.classList.add('hidden');
+            responseContainer.textContent = resultText;
+            responseContainer.classList.remove('hidden');
+        });
+
+        const formatCurrency = (num) => new Intl.NumberFormat('ko-KR').format(num) + ' 원';
+
+        const setupCalculator = (buttonId, resultId, calculationFn) => {
+            const button = document.getElementById(buttonId);
+            button.addEventListener('click', () => {
+                const result = calculationFn();
+                document.getElementById(resultId).textContent = formatCurrency(Math.round(result));
+            });
+            button.click();
+        };
+
+        setupCalculator('calculateKyobo', 'kyoboResult', () => {
+            const price = parseFloat(document.getElementById('kyoboPrice').value) || 0;
+            const fee = parseFloat(document.getElementById('kyoboPlatformFee').value) / 100 || 0;
+            const royalty = parseFloat(document.getElementById('kyoboRoyalty').value) / 100 || 0;
+            const sales = parseInt(document.getElementById('kyoboSales').value) || 0;
+            return (price * (1 - fee)) * royalty * sales;
+        });
+
+        setupCalculator('calculateKakao', 'kakaoResult', () => {
+            const price = parseFloat(document.getElementById('kakaoPrice').value) || 0;
+            const fee = parseFloat(document.getElementById('kakaoPlatformFee').value) / 100 || 0;
+            const royalty = parseFloat(document.getElementById('kakaoRoyalty').value) / 100 || 0;
+            const subs = parseInt(document.getElementById('kakaoSubscribers').value) || 0;
+            const views = parseInt(document.getElementById('kakaoViews').value) || 0;
+            return (price * (1 - fee)) * royalty * (subs * views);
+        });
+
+        setupCalculator('calculateNaver', 'naverResult', () => {
+            const price = parseFloat(document.getElementById('naverPrice').value) || 0;
+            const fee = parseFloat(document.getElementById('naverPlatformFee').value) / 100 || 0;
+            const royalty = parseFloat(document.getElementById('naverRoyalty').value) / 100 || 0;
+            const subs = parseInt(document.getElementById('naverSubscribers').value) || 0;
+            const views = parseInt(document.getElementById('naverViews').value) || 0;
+            return (price * (1 - fee)) * royalty * (subs * views);
+        });
+
+        setupCalculator('calculateRidi', 'ridiResult', () => {
+            const price = parseFloat(document.getElementById('ridiPrice').value) || 0;
+            const fee = parseFloat(document.getElementById('ridiPlatformFee').value) / 100 || 0;
+            const royalty = parseFloat(document.getElementById('ridiRoyalty').value) / 100 || 0;
+            const sales = parseInt(document.getElementById('ridiSales').value) || 0;
+            return (price * (1 - fee)) * royalty * sales;
+        });
+
+    </script>
+</body>
+</html>
