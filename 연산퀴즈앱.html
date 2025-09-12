@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신나는 수학 연산 게임!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Gaegu', cursive;
+            touch-action: manipulation; /* 모바일에서 더블 탭 확대 방지 */
+        }
+        /* 커스텀 애니메이션 */
+        @keyframes correct-animation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1); }
+        }
+        @keyframes incorrect-animation {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-15px); }
+            75% { transform: translateX(15px); }
+        }
+        .correct-anim {
+            animation: correct-animation 0.5s ease-in-out;
+        }
+        .incorrect-anim {
+            animation: incorrect-animation 0.4s ease-in-out;
+        }
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: flex;
+        }
+        /* 체크박스 커스텀 스타일 */
+        .custom-checkbox:checked {
+            background-color: #f59e0b;
+            border-color: #f59e0b;
+        }
+        .custom-checkbox:checked::after {
+            content: '✔';
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="bg-amber-100 flex items-center justify-center min-h-screen">
+
+    <div class="container mx-auto p-4 max-w-lg w-full">
+        
+        <!-- 시작 화면 -->
+        <div id="start-screen" class="screen active flex-col items-center justify-center bg-white p-8 rounded-2xl shadow-lg space-y-6">
+            <h1 class="text-5xl font-bold text-amber-600">신나는 수학 연산!</h1>
+            
+            <!-- 난이도 선택 -->
+            <div class="w-full">
+                <h2 class="text-2xl font-bold text-gray-700 mb-2">🚀 난이도를 골라봐!</h2>
+                <div id="difficulty-options" class="flex justify-between space-x-2">
+                    <button data-level="easy" class="difficulty-btn flex-1 bg-green-400 text-white p-4 rounded-lg text-xl font-bold shadow hover:bg-green-500 transition-transform transform hover:scale-105 border-4 border-transparent">초급</button>
+                    <button data-level="medium" class="difficulty-btn flex-1 bg-blue-400 text-white p-4 rounded-lg text-xl font-bold shadow hover:bg-blue-500 transition-transform transform hover:scale-105 border-4 border-transparent">중급</button>
+                    <button data-level="hard" class="difficulty-btn flex-1 bg-red-400 text-white p-4 rounded-lg text-xl font-bold shadow hover:bg-red-500 transition-transform transform hover:scale-105 border-4 border-transparent">고급</button>
+                </div>
+            </div>
+
+            <!-- 연산 종류 선택 -->
+            <div class="w-full">
+                <h2 class="text-2xl font-bold text-gray-700 mb-2">🧮 어떤 계산을 해볼까? (하나 이상)</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="flex items-center space-x-3 p-3 bg-gray-100 rounded-lg cursor-pointer">
+                        <input type="checkbox" name="operator" value="+" class="custom-checkbox h-8 w-8 rounded-md border-2 border-gray-300 appearance-none focus:ring-2 focus:ring-amber-500" checked>
+                        <span class="text-3xl font-bold text-gray-800">+ 덧셈</span>
+                    </label>
+                    <label class="flex items-center space-x-3 p-3 bg-gray-100 rounded-lg cursor-pointer">
+                        <input type="checkbox" name="operator" value="-" class="custom-checkbox h-8 w-8 rounded-md border-2 border-gray-300 appearance-none focus:ring-2 focus:ring-amber-500" checked>
+                        <span class="text-3xl font-bold text-gray-800">- 뺄셈</span>
+                    </label>
+                    <label class="flex items-center space-x-3 p-3 bg-gray-100 rounded-lg cursor-pointer">
+                        <input type="checkbox" name="operator" value="*" class="custom-checkbox h-8 w-8 rounded-md border-2 border-gray-300 appearance-none focus:ring-2 focus:ring-amber-500">
+                        <span class="text-3xl font-bold text-gray-800">× 곱셈</span>
+                    </label>
+                    <label class="flex items-center space-x-3 p-3 bg-gray-100 rounded-lg cursor-pointer">
+                        <input type="checkbox" name="operator" value="/" class="custom-checkbox h-8 w-8 rounded-md border-2 border-gray-300 appearance-none focus:ring-2 focus:ring-amber-500">
+                        <span class="text-3xl font-bold text-gray-800">÷ 나눗셈</span>
+                    </label>
+                </div>
+            </div>
+            
+            <button id="start-button" class="w-full bg-amber-500 text-white py-4 rounded-xl text-3xl font-bold shadow-lg hover:bg-amber-600 transition-transform transform hover:scale-105 disabled:bg-gray-400 disabled:cursor-not-allowed">시작하기!</button>
+            <p id="start-error" class="text-red-500 h-4"></p>
+        </div>
+
+        <!-- 학습 화면 -->
+        <div id="quiz-screen" class="screen flex-col items-center justify-center bg-white p-8 rounded-2xl shadow-lg space-y-6">
+            <div class="flex justify-between w-full items-center">
+                <div class="text-2xl font-bold">점수: <span id="current-score" class="text-blue-600">0</span></div>
+                <div class="text-2xl font-bold">콤보: <span id="combo-counter" class="text-green-600">0</span></div>
+            </div>
+            
+            <div class="w-full text-center bg-gray-100 p-8 rounded-lg">
+                <p id="question-text" class="font-bold text-gray-800"></p>
+            </div>
+
+            <div class="relative w-full">
+                <input type="number" id="answer-input" class="w-full text-5xl p-4 text-center border-4 border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none" placeholder="정답은?">
+                <div id="feedback-indicator" class="absolute top-1/2 -translate-y-1/2 right-4 text-5xl"></div>
+            </div>
+            
+            <button id="submit-button" class="w-full bg-blue-500 text-white py-4 rounded-xl text-3xl font-bold shadow-lg hover:bg-blue-600 transition-transform transform hover:scale-105">제출하기</button>
+
+            <button id="back-to-start" class="text-gray-500 hover:text-gray-800 text-lg">처음으로 돌아가기</button>
+        </div>
+
+        <!-- 결과 화면 -->
+        <div id="result-screen" class="screen flex-col items-center justify-center bg-white p-8 rounded-2xl shadow-lg space-y-6 text-center">
+            <h1 class="text-5xl font-bold text-amber-600">결과 발표!</h1>
+            
+            <div class="bg-blue-100 p-6 rounded-lg w-full text-3xl space-y-2">
+                <p>이번에 얻은 점수: <span id="session-score" class="font-bold text-blue-700"></span>점</p>
+                <p>맞은 개수: <span id="correct-count" class="font-bold text-green-700"></span>개</p>
+                <p>틀린 개수: <span id="incorrect-count" class="font-bold text-red-700"></span>개</p>
+            </div>
+            
+             <div class="bg-green-100 p-6 rounded-lg w-full text-3xl space-y-2">
+                <p>나의 최고 점수: <span id="best-score" class="font-bold text-green-800"></span>점</p>
+                <p>총 점수: <span id="total-score" class="font-bold text-green-800"></span>점</p>
+            </div>
+
+            <div class="flex space-x-4 w-full">
+                <button id="restart-button" class="flex-1 bg-green-500 text-white py-3 rounded-xl text-2xl font-bold shadow-lg hover:bg-green-600 transition-transform transform hover:scale-105">다시하기</button>
+                <button id="change-difficulty-button" class="flex-1 bg-amber-500 text-white py-3 rounded-xl text-2xl font-bold shadow-lg hover:bg-amber-600 transition-transform transform hover:scale-105">설정 변경</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM 요소 ---
+            const screens = {
+                start: document.getElementById('start-screen'),
+                quiz: document.getElementById('quiz-screen'),
+                result: document.getElementById('result-screen'),
+            };
+            const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+            const operatorCheckboxes = document.querySelectorAll('input[name="operator"]');
+            const startButton = document.getElementById('start-button');
+            const startError = document.getElementById('start-error');
+            const questionText = document.getElementById('question-text');
+            const answerInput = document.getElementById('answer-input');
+            const submitButton = document.getElementById('submit-button');
+            const currentScoreEl = document.getElementById('current-score');
+            const comboCounterEl = document.getElementById('combo-counter');
+            const feedbackIndicator = document.getElementById('feedback-indicator');
+            
+            const sessionScoreEl = document.getElementById('session-score');
+            const correctCountEl = document.getElementById('correct-count');
+            const incorrectCountEl = document.getElementById('incorrect-count');
+            const totalScoreEl = document.getElementById('total-score');
+            const bestScoreEl = document.getElementById('best-score');
+            
+            const restartButton = document.getElementById('restart-button');
+            const changeDifficultyButton = document.getElementById('change-difficulty-button');
+            const backToStartButton = document.getElementById('back-to-start');
+            
+            // --- 상태 관리 ---
+            let gameState = {};
+            let savedData = {};
+
+            const defaultState = {
+                difficulty: null,
+                operators: [],
+                currentQuestion: '',
+                currentAnswer: null,
+                score: 0,
+                combo: 0,
+                correctCount: 0,
+                incorrectCount: 0,
+            };
+
+            // --- localStorage 데이터 로드 ---
+            function loadData() {
+                const data = JSON.parse(localStorage.getItem('mathGameData')) || {
+                    totalScore: 0,
+                    bestScore: 0,
+                };
+                savedData = data;
+                updateScoreDisplays();
+            }
+
+            // --- localStorage 데이터 저장 ---
+            function saveData() {
+                localStorage.setItem('mathGameData', JSON.stringify(savedData));
+                updateScoreDisplays();
+            }
+            
+            function updateScoreDisplays() {
+                if (totalScoreEl) totalScoreEl.textContent = savedData.totalScore;
+                if (bestScoreEl) bestScoreEl.textContent = savedData.bestScore;
+            }
+            
+            // --- 화면 전환 ---
+            function showScreen(screenName) {
+                Object.values(screens).forEach(screen => screen.classList.remove('active'));
+                screens[screenName].classList.add('active');
+
+                const container = document.querySelector('.container');
+                if (screenName === 'quiz') {
+                    container.classList.remove('max-w-lg');
+                    container.classList.add('max-w-xl');
+                } else {
+                    container.classList.remove('max-w-xl');
+                    container.classList.add('max-w-lg');
+                }
+            }
+
+            // --- 문제 글자 크기 조절 ---
+            function adjustQuestionFontSize() {
+                const questionLength = gameState.currentQuestion.length;
+                const classList = questionText.classList;
+                
+                classList.remove('text-8xl', 'text-7xl', 'text-6xl', 'text-5xl');
+
+                if (questionLength > 15) { // e.g., "10 × 10 + 10 - 10"
+                    classList.add('text-5xl');
+                } else if (questionLength > 10) { // e.g., "10 × 10 + 10"
+                    classList.add('text-6xl');
+                } else if (questionLength > 7) { // e.g., "10 + 10"
+                     classList.add('text-7xl');
+                } else {
+                    classList.add('text-8xl');
+                }
+            }
+
+            // --- 문제 생성 로직 ---
+            function generateQuestion() {
+                const { difficulty, operators } = gameState;
+                const terms = { easy: 2, medium: 3, hard: 4 }[difficulty];
+                const maxRetries = 100;
+
+                for (let i = 0; i < maxRetries; i++) {
+                    let question = '';
+                    let nums = [];
+                    let ops = [];
+
+                    for (let j = 0; j < terms; j++) {
+                        nums.push(Math.ceil(Math.random() * 10));
+                    }
+
+                    for (let j = 0; j < terms - 1; j++) {
+                        ops.push(operators[Math.floor(Math.random() * operators.length)]);
+                    }
+                    
+                    // 나눗셈 규칙 적용
+                    for(let j=0; j < ops.length; j++) {
+                        if (ops[j] === '/') {
+                            const divisor = nums[j+1];
+                            const multiple = Math.ceil(Math.random() * Math.floor(10 / divisor));
+                            nums[j] = divisor * multiple;
+                        }
+                    }
+
+                    // 뺄셈 규칙 적용 (초급)
+                    if (difficulty === 'easy' && ops[0] === '-') {
+                         if (nums[0] < nums[1]) {
+                            [nums[0], nums[1]] = [nums[1], nums[0]]; // Swap
+                        }
+                    }
+                    
+                    // 문제 문자열 생성
+                    question = nums[0].toString();
+                    for (let j = 0; j < ops.length; j++) {
+                        question += ` ${ops[j]} ${nums[j+1]}`;
+                    }
+
+                    // 문제 유효성 검사 (음수 결과, 정수가 아닌 나눗셈 방지)
+                    try {
+                        let tempQuestion = question.replace(/÷/g, '/').replace(/×/g, '*');
+                        
+                        // 연산 순서에 맞게 계산하며 중간 결과 체크
+                        // 1. 곱셈, 나눗셈 먼저
+                        const mdRegex = /(-?\d+\.?\d*)\s*([*\/])\s*(-?\d+\.?\d*)/;
+                        while(mdRegex.test(tempQuestion)) {
+                           tempQuestion = tempQuestion.replace(mdRegex, (match, n1, op, n2) => {
+                                n1 = parseFloat(n1);
+                                n2 = parseFloat(n2);
+                                if (op === '/' && n1 % n2 !== 0) throw new Error("Not an integer division");
+                                return op === '*' ? n1 * n2 : n1 / n2;
+                           });
+                        }
+
+                        // 2. 덧셈, 뺄셈
+                        const asRegex = /(-?\d+\.?\d*)\s*([+\-])\s*(-?\d+\.?\d*)/;
+                        while(asRegex.test(tempQuestion)) {
+                           tempQuestion = tempQuestion.replace(asRegex, (match, n1, op, n2) => {
+                               n1 = parseFloat(n1);
+                               n2 = parseFloat(n2);
+                               const result = op === '+' ? n1 + n2 : n1 - n2;
+                               if(result < 0) throw new Error("Negative result");
+                               return result;
+                           });
+                        }
+                        
+                        const answer = parseFloat(tempQuestion);
+                        if (answer < 0 || !Number.isInteger(answer)) {
+                            continue; // 유효하지 않으면 다시 생성
+                        }
+
+                        gameState.currentQuestion = question.replace(/\//g, '÷').replace(/\*/g, '×');
+                        gameState.currentAnswer = answer;
+                        
+                        questionText.textContent = gameState.currentQuestion;
+                        adjustQuestionFontSize(); // 글자 크기 조절
+                        return; // 성공적으로 생성됨
+                    } catch (error) {
+                         // 오류 발생 시 재시도
+                    }
+                }
+                // 만약 100번 시도해도 못 만들면, 간단한 문제로 대체
+                console.warn("Failed to generate a valid question, providing a simple one.");
+                gameState.currentQuestion = '1 + 1';
+                gameState.currentAnswer = 2;
+                questionText.textContent = gameState.currentQuestion;
+            }
+
+            // --- 정답 확인 ---
+            function checkAnswer() {
+                const userAnswer = parseInt(answerInput.value, 10);
+                if (isNaN(userAnswer)) return;
+
+                const isCorrect = userAnswer === gameState.currentAnswer;
+                
+                answerInput.disabled = true;
+                submitButton.disabled = true;
+
+                if (isCorrect) {
+                    // 정답
+                    feedbackIndicator.textContent = '😊';
+                    feedbackIndicator.parentElement.classList.add('correct-anim');
+                    gameState.combo++;
+                    gameState.correctCount++;
+                    const scoreToAdd = { easy: 10, medium: 15, hard: 20 }[gameState.difficulty];
+                    gameState.score += scoreToAdd;
+                    if (gameState.combo > 0 && gameState.combo % 3 === 0) {
+                        gameState.score += 5; // 콤보 보너스
+                    }
+                } else {
+                    // 오답
+                    feedbackIndicator.textContent = '😥';
+                    feedbackIndicator.parentElement.classList.add('incorrect-anim');
+                    gameState.combo = 0;
+                    gameState.incorrectCount++;
+                    gameState.score = Math.max(0, gameState.score - 5);
+                }
+
+                updateQuizUI();
+
+                setTimeout(() => {
+                    feedbackIndicator.textContent = '';
+                    feedbackIndicator.parentElement.classList.remove('correct-anim', 'incorrect-anim');
+                    answerInput.value = '';
+                    answerInput.disabled = false;
+                    submitButton.disabled = false;
+                    generateQuestion();
+                    answerInput.focus();
+                }, 1000);
+            }
+
+            function updateQuizUI() {
+                currentScoreEl.textContent = gameState.score;
+                comboCounterEl.textContent = gameState.combo;
+            }
+
+            function startQuiz() {
+                // 게임 상태 초기화
+                gameState = { ...defaultState };
+                gameState.difficulty = document.querySelector('.difficulty-btn.border-amber-500').dataset.level;
+                gameState.operators = Array.from(operatorCheckboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+
+                if(gameState.operators.length === 0 || !gameState.difficulty) {
+                   startError.textContent = '난이도와 연산을 선택해주세요!';
+                   return;
+                }
+                
+                startError.textContent = '';
+                updateQuizUI();
+                generateQuestion();
+                showScreen('quiz');
+                answerInput.focus();
+            }
+            
+            function finishQuiz() {
+                sessionScoreEl.textContent = gameState.score;
+                correctCountEl.textContent = gameState.correctCount;
+                incorrectCountEl.textContent = gameState.incorrectCount;
+                
+                savedData.totalScore += gameState.score;
+                if (gameState.score > savedData.bestScore) {
+                    savedData.bestScore = gameState.score;
+                }
+                
+                saveData();
+                showScreen('result');
+            }
+            
+            // --- 이벤트 리스너 ---
+            difficultyButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    difficultyButtons.forEach(btn => btn.classList.remove('border-amber-500', 'ring-4', 'ring-amber-300'));
+                    button.classList.add('border-amber-500', 'ring-4', 'ring-amber-300');
+                    validateStart();
+                });
+            });
+            
+            operatorCheckboxes.forEach(cb => {
+                cb.addEventListener('change', validateStart);
+            });
+
+            function validateStart() {
+                const isDifficultySelected = !!document.querySelector('.difficulty-btn.border-amber-500');
+                const isOperatorSelected = Array.from(operatorCheckboxes).some(cb => cb.checked);
+                
+                if (isDifficultySelected && isOperatorSelected) {
+                    startButton.disabled = false;
+                    startError.textContent = '';
+                } else {
+                    startButton.disabled = true;
+                    startError.textContent = '난이도와 연산을 모두 골라주세요!';
+                }
+            }
+            
+            startButton.addEventListener('click', startQuiz);
+            
+            submitButton.addEventListener('click', checkAnswer);
+            answerInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    checkAnswer();
+                }
+            });
+            
+            backToStartButton.addEventListener('click', () => {
+                if(confirm('정말로 게임을 중단하고 처음으로 돌아가시겠어요? 점수는 저장되지 않아요.')) {
+                    finishQuiz();
+                    showScreen('start');
+                }
+            });
+            
+            restartButton.addEventListener('click', startQuiz);
+            changeDifficultyButton.addEventListener('click', () => showScreen('start'));
+
+            // --- 초기화 ---
+            loadData();
+            // 초급을 기본으로 선택
+            difficultyButtons[0].click();
+            validateStart();
+        });
+    </script>
+</body>
+</html>
+
