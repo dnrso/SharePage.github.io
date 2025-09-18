@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>집중훈련 앱 설정</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        /* Custom styles for the range slider to match the image */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb; /* gray-200 */
+            border-radius: 9999px;
+            outline: none;
+            opacity: 0.9;
+            transition: opacity .2s;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #2563eb; /* blue-600 */
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 2px rgba(0,0,0,0.3);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #2563eb; /* blue-600 */
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 2px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+
+    <!-- 전역 메시지 (모든 화면에서 표시 가능) -->
+    <div id="global-message" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 hidden">
+        <div id="global-message-text" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-medium"></div>
+    </div>
+
+    <!-- 메인 화면 -->
+    <div id="screen-main" class="relative w-full max-w-md mx-auto bg-white shadow-lg rounded-2xl">
+        <div class="p-6 sm:p-8">
+            <h1 class="text-center text-2xl font-bold text-gray-800 mb-8">집중훈련 앱 설정</h1>
+
+            <!-- 메시지 표시 영역 -->
+            <div id="message-area" class="mb-6 hidden">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p id="message-text" class="text-blue-800 text-center font-medium"></p>
+                </div>
+            </div>
+
+            <div class="space-y-5">
+                <h2 class="text-lg font-semibold text-gray-700">훈련 메뉴 선택</h2>
+
+                <!-- 훈련 메뉴 옵션 -->
+                <div class="space-y-4">
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox" id="breathing-toggle" checked class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-800 text-base">복식 호흡</span>
+                    </label>
+
+                    <div>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" id="metronome-toggle" checked class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <span class="text-gray-800 text-base">박자기</span>
+                        </label>
+                        
+                        <!-- 박자기 상세 설정 -->
+                        <div id="metronome-settings" class="mt-3 ml-8 p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-4">
+                            <div>
+                                <label for="bpm-slider" id="bpm-label" class="block text-sm font-medium text-gray-600 mb-2">BPM (분당 비트 수): 120</label>
+                                <input type="range" id="bpm-slider" min="40" max="220" value="120" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                            <div>
+                                <label for="participants" class="block text-sm font-medium text-gray-600">참여 인원 수</label>
+                                <input type="number" id="participants" value="1" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            </div>
+                             <div>
+                                <label for="max-count" class="block text-sm font-medium text-gray-600">최대 카운트</label>
+                                <input type="number" id="max-count" value="1000" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox" id="horizontal-toggle" checked class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-800 text-base">가로 회전 훈련</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox" id="vertical-toggle" checked class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-800 text-base">세로 회전 훈련</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 하단 버튼 -->
+        <div class="px-6 sm:px-8 pb-6 pt-4">
+            <button id="start-training-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300">
+                훈련 시작
+            </button>
+        </div>
+    </div>
+
+    <!-- 준비 화면 -->
+    <div id="screen-prep" class="hidden relative w-full max-w-md mx-auto bg-white shadow-lg rounded-2xl p-10 flex flex-col items-center justify-center space-y-10">
+        <h2 id="prep-title" class="text-2xl font-bold text-gray-800">복식 호흡 준비</h2>
+        <p id="prep-status" class="text-xl text-blue-600 font-semibold"></p>
+    </div>
+
+    <!-- 훈련 진행 화면 -->
+    <div id="screen-training" class="hidden relative w-full max-w-md mx-auto bg-white shadow-lg rounded-2xl p-8 flex flex-col items-center space-y-8">
+        <div class="w-full text-center">
+            <div class="text-sm font-medium text-gray-500 mb-1">남은 시간</div>
+            <div id="training-timer" class="text-4xl font-extrabold text-gray-900 tracking-wide">60</div>
+        </div>
+        <div id="breath-visual" class="w-48 h-48 rounded-full flex items-center justify-center text-white text-lg font-bold shadow-inner transition-all duration-700"></div>
+        <div id="breath-text" class="text-xl font-semibold text-gray-800 text-center"></div>
+    </div>
+
+    <!-- 박자기 준비 화면 -->
+    <div id="screen-metronome-prep" class="hidden relative w-full max-w-md mx-auto bg-white shadow-lg rounded-2xl p-10 flex flex-col items-center justify-center space-y-10">
+        <h2 class="text-2xl font-bold text-gray-800">박자기 준비</h2>
+        <p id="metronome-prep-status" class="text-xl text-blue-600 font-semibold"></p>
+    </div>
+
+    <!-- 박자기 진행 화면 -->
+    <div id="screen-metronome" class="hidden relative w-full max-w-md mx-auto bg-white shadow-lg rounded-2xl p-6 flex flex-col space-y-6">
+        <div class="flex items-center justify-between">
+            <h2 class="text-xl font-bold text-gray-800">박자기</h2>
+            <div id="participant-counter" class="text-sm font-medium text-gray-500">-/-</div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button id="metronome-end-btn" class="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold py-2 rounded-md transition">훈련 종료</button>
+            <button id="metronome-restart-btn" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-semibold py-2 rounded-md transition">재시작</button>
+        </div>
+        <div class="flex flex-col items-center justify-center py-6">
+            <div class="text-sm font-medium text-gray-500 mb-2">현재 카운트</div>
+            <div id="metronome-count" class="text-5xl font-extrabold text-gray-900 tracking-wide">0</div>
+        </div>
+        <div>
+            <button id="participant-done-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">참가자 완료</button>
+        </div>
+        <div id="records-container" class="border border-gray-200 rounded-lg p-4 max-h-40 overflow-auto hidden">
+            <ul id="records-list" class="space-y-1 text-sm text-gray-700"></ul>
+        </div>
+    </div>
+
+    <!-- 가로 회전 훈련 화면 -->
+    <div id="screen-horizontal" class="hidden relative w-full max-w-md mx-auto bg-white shadow-lg rounded-2xl p-6 flex flex-col space-y-6">
+        <div class="flex items-center justify-between">
+            <h2 class="text-xl font-bold text-gray-800">가로 회전 훈련</h2>
+            <div class="text-sm font-medium text-gray-500 flex items-center space-x-2">
+                <span>남은 시간</span>
+                <span id="horizontal-timer" class="text-lg font-bold text-gray-800">60</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button id="horizontal-end-btn" class="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold py-2 rounded-md transition">훈련 종료</button>
+            <button id="horizontal-restart-btn" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-semibold py-2 rounded-md transition">재시작</button>
+        </div>
+        <div class="relative w-full h-56 flex items-center justify-center overflow-hidden">
+            <div id="horizontal-orbit" class="relative w-full h-full flex items-center justify-center pointer-events-none">
+                <div id="horizontal-dot" class="w-10 h-10 rounded-full bg-blue-500 shadow-lg"></div>
+            </div>
+        </div>
+        <div class="space-y-2">
+            <label for="horizontal-range" class="text-sm font-medium text-gray-600 flex justify-between"><span>이동 폭 조절</span><span id="horizontal-range-label" class="font-semibold text-gray-800">50%</span></label>
+            <input id="horizontal-range" type="range" min="20" max="80" value="50" class="w-full">
+        </div>
+        <div id="horizontal-message" class="text-center text-sm font-medium text-blue-600"></div>
+    </div>
+
+    <!-- 세로 회전 훈련 화면 -->
+    <div id="screen-vertical" class="hidden relative w-full max-w-md mx-auto bg-white shadow-lg rounded-2xl p-6 flex flex-col space-y-6">
+        <div class="flex items-center justify-between">
+            <h2 class="text-xl font-bold text-gray-800">세로 회전 훈련</h2>
+            <div class="text-sm font-medium text-gray-500 flex items-center space-x-2">
+                <span>남은 시간</span>
+                <span id="vertical-timer" class="text-lg font-bold text-gray-800">60</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button id="vertical-end-btn" class="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold py-2 rounded-md transition">훈련 종료</button>
+            <button id="vertical-restart-btn" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-semibold py-2 rounded-md transition">재시작</button>
+        </div>
+        <div class="relative w-full h-56 flex items-center justify-center overflow-hidden">
+            <div id="vertical-orbit" class="relative w-full h-full flex items-center justify-center pointer-events-none">
+                <div id="vertical-dot" class="w-10 h-10 rounded-full bg-emerald-500 shadow-lg"></div>
+            </div>
+        </div>
+        <div class="space-y-2">
+            <label for="vertical-range" class="text-sm font-medium text-gray-600 flex justify-between"><span>이동 높이 조절</span><span id="vertical-range-label" class="font-semibold text-gray-800">50%</span></label>
+            <input id="vertical-range" type="range" min="20" max="80" value="50" class="w-full">
+        </div>
+        <div id="vertical-message" class="text-center text-sm font-medium text-blue-600"></div>
+    </div>
+
+    <!-- 종료 화면 -->
+    <div id="screen-end" class="hidden relative w-full max-w-md mx-auto bg-white shadow-lg rounded-2xl p-12 flex flex-col items-center space-y-8">
+        <h2 id="end-title" class="text-2xl font-bold text-gray-800">훈련 종료!</h2>
+        <p id="end-subtitle" class="text-lg text-blue-600 font-medium"></p>
+    </div>
+
+    <script>
+    (function() {
+        'use strict';
+        
+        // ===== 설정 객체 =====
+        /**
+         * 앱의 전체 설정을 관리하는 객체
+         */
+        const CONFIG = Object.freeze({
+            // 복식 호흡 훈련 설정
+            breathing: { 
+                totalSeconds: 60,       // 총 훈련 시간 (초)
+                phaseSeconds: 10,       // 각 호흡 단계 시간 (초)
+                phases: [
+                    { 
+                        type: 'inhale', 
+                        text: '코로 숨을 깊게 들이마시세요.', 
+                        color: 'bg-blue-500' 
+                    },
+                    { 
+                        type: 'exhale', 
+                        text: '입으로 숨을 천천히 내쉬세요.', 
+                        color: 'bg-emerald-500' 
+                    }
+                ]
+            },
+            // 가로/세로 회전 훈련 설정
+            axis: { 
+                duration: 60,           // 훈련 지속 시간 (초)
+                cycleMs: 4000          // 한 번의 회전 주기 (밀리초)
+            },
+            // 메시지 설정
+            messages: { 
+                posture: '시작하기 전 바르게 앉아 자세를 준비하세요.' 
+            }
+        });
+
+        // ===== 유틸리티 함수들 =====
+        /**
+         * getElementById의 간단한 축약형
+         * @param {string} id - 요소의 ID
+         * @returns {HTMLElement} DOM 요소
+         */
+        const $ = (id) => document.getElementById(id);
+        
+        /**
+         * 모든 화면 목록
+         */
+        const screens = [
+            'screen-main', 'screen-prep', 'screen-training', 
+            'screen-metronome-prep', 'screen-metronome', 
+            'screen-horizontal', 'screen-vertical', 'screen-end'
+        ];
+        
+        /**
+         * 특정 화면만 보이도록 설정하고 나머지는 숨김
+         * @param {string} id - 보여줄 화면의 ID
+         */
+        function showScreen(id) { 
+            screens.forEach(screenId => { 
+                const element = $(screenId); 
+                if (!element) return; 
+                element.classList.toggle('hidden', screenId !== id); 
+            }); 
+        }
+        
+        /**
+         * 지정된 시간만큼 대기하는 Promise
+         * @param {number} ms - 대기할 시간 (밀리초)
+         * @returns {Promise} 대기 Promise
+         */
+        function delay(ms) { 
+            return new Promise(resolve => setTimeout(resolve, ms)); 
+        }
+
+        // ===== BPM 슬라이더 설정 =====
+        /**
+         * BPM 슬라이더와 라벨 요소들
+         */
+        const bpmSlider = $('bpm-slider');
+        const bpmLabel = $('bpm-label');
+        
+        /**
+         * BPM 슬라이더 값 변경 시 라벨 업데이트
+         */
+        bpmSlider.addEventListener('input', e => { 
+            bpmLabel.textContent = `BPM (분당 비트 수): ${e.target.value}`; 
+        });
+        
+        /**
+         * 박자기 토글과 설정 영역
+         */
+        const metronomeToggle = $('metronome-toggle');
+        const metronomeSettings = $('metronome-settings');
+        
+        /**
+         * 박자기 체크박스 상태에 따라 설정 영역 표시/숨김
+         */
+        metronomeToggle.addEventListener('change', e => { 
+            metronomeSettings.style.display = e.target.checked ? 'block' : 'none'; 
+        });
+
+        // ===== 음성 합성 기능 =====
+        /**
+         * 브라우저의 음성 합성 API
+         */
+        const synth = window.speechSynthesis;
+        let voices = [];
+        
+        /**
+         * 사용 가능한 음성 목록을 새로고침
+         */
+        function refreshVoices() { 
+            voices = synth ? synth.getVoices() : []; 
+        }
+        
+        // 음성 목록 초기 로드
+        refreshVoices();
+        
+        // 음성 목록이 변경될 때마다 새로고침
+        if (speechSynthesis.onvoiceschanged !== undefined) { 
+            speechSynthesis.onvoiceschanged = refreshVoices; 
+        }
+        
+        /**
+         * 한국어로 텍스트를 음성으로 출력
+         * @param {string} text - 읽을 텍스트
+         * @returns {Promise} 음성 출력 완료 Promise
+         */
+        function speakKorean(text) {
+            return new Promise(resolve => {
+                // 음성 합성이 지원되지 않는 경우
+                if (!synth) { 
+                    showMessage('음성 기능이 지원되지 않는 브라우저입니다.'); 
+                    return resolve(); 
+                }
+                
+                // 한국어 음성 찾기
+                const koreanVoice = voices.find(v => /ko/i.test(v.lang));
+                
+                // 이전 음성 출력 중단
+                try { 
+                    synth.cancel(); 
+                } catch {}
+                
+                // 새로운 음성 생성 및 설정
+                const utterance = new SpeechSynthesisUtterance(text);
+                if (koreanVoice) {
+                    utterance.voice = koreanVoice; 
+                } else {
+                    utterance.lang = 'ko-KR';
+                }
+                utterance.rate = 0.9;      // 말하기 속도
+                utterance.pitch = 1;       // 음높이
+                utterance.volume = 1;      // 볼륨
+                utterance.onend = () => resolve();     // 완료 시 Promise 해결
+                utterance.onerror = () => resolve();   // 오류 시에도 Promise 해결
+                
+                // 음성 출력 시작
+                try { 
+                    synth.speak(utterance); 
+                } catch { 
+                    resolve(); 
+                }
+            });
+        }
+
+        // ===== 메시지 표시 기능 =====
+        /**
+         * 전역 메시지를 화면 상단에 표시
+         * @param {string} text - 표시할 메시지 텍스트
+         * @param {number} timeout - 메시지 표시 시간 (밀리초, 기본값: 3000)
+         */
+        function showMessage(text, timeout = 3000) {
+            // 기존 메시지 영역 찾기 또는 생성
+            let messageWrapper = document.getElementById('global-message');
+            if (!messageWrapper) {
+                messageWrapper = document.createElement('div');
+                messageWrapper.id = 'global-message';
+                messageWrapper.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 z-50 hidden';
+                messageWrapper.innerHTML = '<div id="global-message-text" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-medium"></div>';
+                document.body.appendChild(messageWrapper);
+            }
+            
+            // 메시지 텍스트 설정
+            const textElement = document.getElementById('global-message-text');
+            if (textElement) { 
+                textElement.textContent = text; 
+            }
+            
+            // 메시지 표시
+            messageWrapper.classList.remove('hidden');
+            
+            // 기존 타이머가 있으면 제거
+            if (showMessage._timeout) {
+                clearTimeout(showMessage._timeout);
+            }
+            
+            // 지정된 시간 후 메시지 숨김
+            showMessage._timeout = setTimeout(() => {
+                messageWrapper.classList.add('hidden');
+            }, timeout);
+        }
+
+        // ===== 훈련 플로우 관리 =====
+        /**
+         * 훈련 시작 버튼과 각종 토글 요소들
+         */
+        const startTrainingBtn = $('start-training-btn');
+        const breathingToggle = $('breathing-toggle');
+        const horizontalToggle = $('horizontal-toggle');
+        const verticalToggle = $('vertical-toggle');
+        
+        /**
+         * 훈련 순서를 관리하는 큐와 현재 활성화된 정리 함수
+         */
+        let trainingQueue = [];
+        let activeCleanup = null;
+        
+        /**
+         * 훈련 시작 버튼을 기본 상태로 리셋
+         */
+        function resetButton() { 
+            startTrainingBtn.disabled = false; 
+            startTrainingBtn.textContent = '훈련 시작'; 
+            startTrainingBtn.classList.remove('opacity-75', 'cursor-not-allowed'); 
+        }
+        
+        /**
+         * 훈련 시작 버튼을 비활성화 상태로 설정
+         */
+        function disableButton() { 
+            startTrainingBtn.disabled = true; 
+            startTrainingBtn.textContent = '음성 출력 중...'; 
+            startTrainingBtn.classList.add('opacity-75', 'cursor-not-allowed'); 
+        }
+
+        /**
+         * 다음 훈련으로 넘어가는 함수
+         * 현재 훈련을 정리하고 큐에서 다음 훈련을 실행
+         */
+        function nextFlow() {
+            // 현재 훈련의 정리 작업 실행
+            if (activeCleanup) { 
+                try { 
+                    activeCleanup(); 
+                } catch {} 
+                activeCleanup = null; 
+            }
+            
+            // 더 이상 훈련이 없으면 메인 화면으로 돌아감
+            if (!trainingQueue.length) { 
+                resetButton(); 
+                showScreen('screen-main'); 
+                return; 
+            }
+            
+            // 다음 훈련 실행
+            const nextTrainingName = trainingQueue.shift();
+            FLOW_HANDLERS[nextTrainingName]();
+        }
+
+        /**
+         * 훈련 시작 버튼 클릭 이벤트 처리
+         */
+        startTrainingBtn.addEventListener('click', () => {
+            // 훈련 큐 초기화
+            trainingQueue = [];
+            
+            // 선택된 훈련들을 큐에 추가
+            if (breathingToggle.checked) trainingQueue.push('breathing');
+            if (metronomeToggle.checked) trainingQueue.push('metronome');
+            if (horizontalToggle.checked) trainingQueue.push('horizontal');
+            if (verticalToggle.checked) trainingQueue.push('vertical');
+            
+            // 선택된 훈련이 없으면 경고 메시지 표시
+            if (!trainingQueue.length) { 
+                showMessage('실행할 훈련이 선택되지 않았습니다.'); 
+                return; 
+            }
+            
+            // 버튼 비활성화 및 자세 안내 메시지 출력
+            disableButton();
+            const postureMessage = CONFIG.messages.posture; 
+            showMessage(postureMessage); 
+            speakKorean(postureMessage).then(() => nextFlow());
+        });
+
+        // ===== 복식 호흡 훈련 =====
+        /**
+         * 복식 호흡 훈련 준비 단계
+         */
+        function breathingPrep() {
+            showScreen('screen-prep');
+            $('prep-status').textContent = '';
+            
+            (async () => { 
+                await speakKorean('복식 호흡 준비'); 
+                await delay(1000); 
+                $('prep-status').textContent = '시작!'; 
+                await speakKorean('시작'); 
+                await delay(500); 
+                breathingRun(); 
+            })();
+        }
+
+        /**
+         * 복식 호흡 훈련 실행
+         */
+        function breathingRun() {
+            showScreen('screen-training');
+            
+            // DOM 요소들 가져오기
+            const timerElement = $('training-timer'); 
+            const visualElement = $('breath-visual'); 
+            const textElement = $('breath-text');
+            
+            // 설정값들
+            const totalSeconds = CONFIG.breathing.totalSeconds; 
+            const phaseLength = CONFIG.breathing.phaseSeconds; 
+            const phases = CONFIG.breathing.phases;
+            
+            // 상태 변수들
+            let remainingTime = totalSeconds; 
+            let currentPhaseIndex = 0; 
+            let phaseElapsedTime = 0; 
+            let intervalId;
+            
+            /**
+             * 현재 호흡 단계에 맞게 UI 업데이트
+             * @param {boolean} isFirstTime - 첫 번째 실행 여부
+             */
+            function applyPhase(isFirstTime) {
+                const currentPhase = phases[currentPhaseIndex];
+                
+                // 시각적 요소 업데이트
+                visualElement.className = 'w-48 h-48 rounded-full flex items-center justify-center text-white text-lg font-bold shadow-inner transition-all duration-700 ' + currentPhase.color;
+                textElement.textContent = currentPhase.text;
+                visualElement.textContent = currentPhase.type === 'inhale' ? '들이쉬기' : '내쉬기';
+                
+                // 음성 안내
+                speakKorean(currentPhase.text);
+            }
+            
+            // 초기 설정
+            applyPhase(true); 
+            timerElement.textContent = remainingTime;
+            
+            // 1초마다 실행되는 타이머
+            intervalId = setInterval(() => {
+                remainingTime--; 
+                phaseElapsedTime++; 
+                timerElement.textContent = remainingTime;
+                
+                // 호흡 단계 전환 체크
+                if (phaseElapsedTime >= phaseLength && remainingTime > 0) { 
+                    phaseElapsedTime = 0; 
+                    currentPhaseIndex = (currentPhaseIndex + 1) % phases.length; 
+                    applyPhase(); 
+                }
+                
+                // 훈련 종료 체크
+                if (remainingTime <= 0) { 
+                    clearInterval(intervalId); 
+                    breathingEnd(); 
+                }
+            }, 1000);
+            
+            // 정리 함수 등록
+            activeCleanup = () => { 
+                clearInterval(intervalId); 
+            };
+        }
+
+        /**
+         * 복식 호흡 훈련 종료
+         */
+        function breathingEnd() {
+            showScreen('screen-end'); 
+            $('end-title').textContent = '복식 호흡 종료'; 
+            $('end-subtitle').textContent = '정말 잘하셨어요.';
+            
+            (async() => { 
+                await speakKorean('훈련 종료! 정말 잘하셨어요.'); 
+                await delay(400); 
+                nextFlow(); 
+            })();
+        }
+
+        // ===== 박자기 훈련 =====
+        /**
+         * 박자기 관련 전역 변수들
+         */
+        let metronomeTimer = null; 
+        let metronomeState = null;
+        
+        /**
+         * 박자기 훈련 준비 단계
+         */
+        function metronomePrep() {
+            showScreen('screen-metronome-prep'); 
+            $('metronome-prep-status').textContent = '';
+            
+            (async() => { 
+                await speakKorean('박자기 준비'); 
+                await delay(800); 
+                $('metronome-prep-status').textContent = '시작!'; 
+                await speakKorean('시작'); 
+                await delay(400); 
+                metronomeRun(); 
+            })();
+        }
+        
+        /**
+         * 박자기 훈련 실행
+         */
+        function metronomeRun() {
+            showScreen('screen-metronome');
+            
+            // 설정값들 가져오기
+            const bpm = parseInt(bpmSlider.value, 10) || 60; 
+            const maxCount = parseInt($('max-count').value, 10) || 999999; 
+            const totalParticipants = parseInt($('participants').value, 10) || 1;
+            
+            // DOM 요소들 가져오기
+            const counterElement = $('metronome-count'); 
+            const participantCounterElement = $('participant-counter'); 
+            const recordsListElement = $('records-list'); 
+            const recordsContainerElement = $('records-container');
+            const doneButton = $('participant-done-btn'); 
+            const endButton = $('metronome-end-btn'); 
+            const restartButton = $('metronome-restart-btn');
+            
+            // 박자기 상태 초기화
+            metronomeState = { 
+                bpm: bpm,
+                intervalMs: 60000 / bpm,        // BPM을 밀리초 간격으로 변환
+                maxCount: maxCount,
+                currentParticipant: 1, 
+                totalParticipants: totalParticipants, 
+                count: 0, 
+                finished: false, 
+                records: [] 
+            };
+            
+            // UI 초기화
+            counterElement.textContent = '0'; 
+            participantCounterElement.textContent = `1/${totalParticipants}`; 
+            recordsListElement.innerHTML = ''; 
+            recordsContainerElement.classList.add('hidden'); 
+            doneButton.disabled = false;
+            
+            /**
+             * 박자기 틱 - 카운트 증가
+             */
+            function tick() { 
+                if (!metronomeState || metronomeState.finished) return; 
+                
+                metronomeState.count++; 
+                counterElement.textContent = metronomeState.count; 
+                
+                // 최대 카운트 도달 확인
+                if (metronomeState.count === metronomeState.maxCount) {
+                    showMessage(`최대 제한 카운트 도달! (${metronomeState.maxCount})`); 
+                }
+            }
+            
+            // 박자기 시작
+            clearInterval(metronomeTimer); 
+            metronomeTimer = setInterval(tick, metronomeState.intervalMs); 
+            tick(); // 즉시 첫 틱 실행
+            
+            /**
+             * 참가자 완료 버튼 클릭 이벤트
+             */
+            doneButton.onclick = () => { 
+                if (!metronomeState || metronomeState.finished) return; 
+                
+                // 기록 컨테이너 표시
+                recordsContainerElement.classList.remove('hidden'); 
+                
+                // 현재 참가자 기록 추가
+                const listItem = document.createElement('li'); 
+                listItem.textContent = `참가자 ${metronomeState.currentParticipant}: ${metronomeState.count}`; 
+                recordsListElement.appendChild(listItem); 
+                metronomeState.records.push({
+                    participant: metronomeState.currentParticipant, 
+                    count: metronomeState.count
+                }); 
+                
+                // 모든 참가자 완료 확인
+                if (metronomeState.currentParticipant >= metronomeState.totalParticipants) { 
+                    metronomeState.finished = true; 
+                    clearInterval(metronomeTimer); 
+                    doneButton.disabled = true; 
+                    showMessage('모든 참가자가 완료되었습니다. 훈련 종료 버튼을 눌러주세요.'); 
+                    participantCounterElement.textContent = `${metronomeState.totalParticipants}/${metronomeState.totalParticipants}`; 
+                } else { 
+                    // 다음 참가자로 이동
+                    metronomeState.currentParticipant++; 
+                    participantCounterElement.textContent = `${metronomeState.currentParticipant}/${metronomeState.totalParticipants}`; 
+                }
+            };
+            
+            /**
+             * 훈련 종료 버튼 클릭 이벤트
+             */
+            endButton.onclick = () => { 
+                clearInterval(metronomeTimer); 
+                metronomeEnd(); 
+            };
+            
+            /**
+             * 재시작 버튼 클릭 이벤트
+             */
+            restartButton.onclick = () => { 
+                if (!confirm('모든 기록이 초기화됩니다. 재시작하시겠습니까?')) return; 
+                clearInterval(metronomeTimer); 
+                metronomeRun(); 
+            };
+            
+            // 정리 함수 등록
+            activeCleanup = () => { 
+                clearInterval(metronomeTimer); 
+            };
+        }
+        
+        /**
+         * 박자기 훈련 종료
+         */
+        function metronomeEnd() { 
+            showScreen('screen-end'); 
+            $('end-title').textContent = '훈련 종료'; 
+            $('end-subtitle').textContent = '수고하셨습니다.'; 
+            
+            (async() => { 
+                await speakKorean('훈련 종료! 수고하셨습니다.'); 
+                await delay(400); 
+                nextFlow(); 
+            })(); 
+        }
+
+        // ===== 가로/세로 회전 훈련 =====
+        /**
+         * 가로 또는 세로 회전 훈련을 생성하는 팩토리 함수
+         * @param {string} prefix - 'horizontal' 또는 'vertical'
+         * @returns {Object} 훈련 객체 (start 메서드 포함)
+         */
+        function createAxisTraining(prefix) {
+            // DOM 요소들 가져오기
+            const timerElement = $(prefix + '-timer'); 
+            const messageElement = $(prefix + '-message'); 
+            const rangeSlider = $(prefix + '-range'); 
+            const rangeLabel = $(prefix + '-range-label');
+            const endButton = $(prefix + '-end-btn'); 
+            const restartButton = $(prefix + '-restart-btn'); 
+            const dotElement = $(prefix + '-dot'); 
+            const orbitElement = $(prefix + '-orbit');
+            
+            // 상태 변수들
+            let trainingState = null; 
+            let timerInterval = null; 
+            let animationFrame = null;
+            
+            /**
+             * 훈련 상태 초기화
+             */
+            function initializeTraining() { 
+                trainingState = { 
+                    remaining: CONFIG.axis.duration,               // 남은 시간
+                    rangePercent: parseInt(rangeSlider.value, 10) || 50,  // 이동 범위 (퍼센트)
+                    startTimestamp: null,                          // 애니메이션 시작 시간
+                    finished: false                                // 완료 여부
+                }; 
+                timerElement.textContent = trainingState.remaining; 
+                messageElement.textContent = ''; 
+            }
+            
+            /**
+             * 타이머 시작 - 1초마다 남은 시간 감소
+             */
+            function startTimer() { 
+                clearInterval(timerInterval); 
+                timerInterval = setInterval(() => { 
+                    if (!trainingState || trainingState.finished) return; 
+                    
+                    trainingState.remaining--; 
+                    timerElement.textContent = trainingState.remaining; 
+                    
+                    // 훈련 시간 종료
+                    if (trainingState.remaining <= 0) { 
+                        trainingState.finished = true; 
+                        clearInterval(timerInterval); 
+                        cancelAnimationFrame(animationFrame); 
+                        messageElement.textContent = '훈련 종료! 수고하셨습니다. 훈련 종료 버튼을 눌러주세요.'; 
+                    } 
+                }, 1000); 
+            }
+            
+            /**
+             * 점의 움직임 애니메이션 시작
+             */
+            function startAnimation() { 
+                cancelAnimationFrame(animationFrame); 
+                trainingState.startTimestamp = performance.now(); 
+                const cycleDuration = CONFIG.axis.cycleMs;
+                
+                /**
+                 * 애니메이션 프레임 함수
+                 * @param {number} currentTime - 현재 시간 (밀리초)
+                 */
+                function animationStep(currentTime) { 
+                    if (!trainingState || trainingState.finished) return; 
+                    
+                    // 한 주기 내에서의 경과 시간 계산
+                    const elapsedInCycle = (currentTime - trainingState.startTimestamp) % cycleDuration; 
+                    const halfCycle = cycleDuration / 2; 
+                    
+                    // 진행률 계산 (0에서 1 사이를 왕복)
+                    let progress = elapsedInCycle <= halfCycle ? 
+                        elapsedInCycle / halfCycle : 
+                        1 - ((elapsedInCycle - halfCycle) / halfCycle); 
+                    
+                    // 이동 거리 계산
+                    const containerDimension = prefix === 'horizontal' ? 
+                        orbitElement.clientWidth : 
+                        orbitElement.clientHeight; 
+                    const travelDistance = (containerDimension * (trainingState.rangePercent / 100)) / 2; 
+                    const position = (progress * 2 - 1) * travelDistance; 
+                    
+                    // 점의 위치 업데이트
+                    dotElement.style.transform = prefix === 'horizontal' ? 
+                        `translateX(${position}px)` : 
+                        `translateY(${position}px)`; 
+                    
+                    // 다음 프레임 요청
+                    animationFrame = requestAnimationFrame(animationStep); 
+                } 
+                
+                animationFrame = requestAnimationFrame(animationStep); 
+            }
+            
+            /**
+             * 훈련 시작
+             */
+            function startTraining() { 
+                showScreen('screen-' + prefix); 
+                initializeTraining(); 
+                startTimer(); 
+                startAnimation(); 
+                bindEvents(); 
+                activeCleanup = cleanup; 
+            }
+            
+            /**
+             * 이벤트 리스너 바인딩
+             */
+            function bindEvents() { 
+                // 범위 슬라이더 변경 이벤트
+                rangeSlider.oninput = e => { 
+                    const value = parseInt(e.target.value, 10); 
+                    trainingState.rangePercent = value; 
+                    rangeLabel.textContent = value + '%'; 
+                }; 
+                
+                // 종료 버튼 클릭 이벤트
+                endButton.onclick = () => { 
+                    if (trainingState && !trainingState.finished) { 
+                        if (!confirm('훈련을 중단하고 다음으로 넘어가시겠습니까?')) return; 
+                    } 
+                    cleanup(); 
+                    nextFlow(); 
+                }; 
+                
+                // 재시작 버튼 클릭 이벤트
+                restartButton.onclick = () => { 
+                    if (!confirm('현재 진행을 재시작하시겠습니까?')) return; 
+                    cleanup(false); 
+                    initializeTraining(); 
+                    startTimer(); 
+                    startAnimation(); 
+                }; 
+            }
+            
+            /**
+             * 정리 작업 - 타이머와 애니메이션 정리
+             * @param {boolean} resetMessage - 메시지 초기화 여부 (기본값: true)
+             */
+            function cleanup(resetMessage = true) { 
+                clearInterval(timerInterval); 
+                cancelAnimationFrame(animationFrame); 
+                timerInterval = null; 
+                animationFrame = null; 
+                if (resetMessage) messageElement.textContent = ''; 
+                trainingState = null; 
+            }
+            
+            return { 
+                start: startTraining 
+            };
+        }
+
+        // 가로 및 세로 회전 훈련 인스턴스 생성
+        const horizontalTraining = createAxisTraining('horizontal');
+        const verticalTraining = createAxisTraining('vertical');
+
+        // ===== 훈련 플로우 핸들러들 =====
+        /**
+         * 각 훈련 타입별 실행 함수들을 매핑하는 객체
+         */
+        const FLOW_HANDLERS = {
+            breathing: breathingPrep,                    // 복식 호흡 훈련
+            metronome: metronomePrep,                    // 박자기 훈련
+            horizontal: () => horizontalTraining.start(), // 가로 회전 훈련
+            vertical: () => verticalTraining.start()      // 세로 회전 훈련
+        };
+    })();
+    </script>
+
+</body>
+</html>
